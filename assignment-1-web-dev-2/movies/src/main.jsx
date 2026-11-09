@@ -11,6 +11,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import MoviesContextProvider from "./contexts/moviesContext";
 import AddMovieReviewPage from './pages/addMovieReviewPage'
 import PopularPage from "./pages/popularPage";
+import NowPlayingPage from "./pages/nowPlayingPage";
 
 
 const queryClient = new QueryClient({
@@ -38,6 +39,7 @@ const App = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="*" element={<Navigate to="/" />} />
             <Route path="/movies/popular" element={<PopularPage />} />
+            <Route path="/movies/now-playing" element={<NowPlayingPage />} />
           </Routes>
         </MoviesContextProvider>
       </BrowserRouter>
