@@ -3,9 +3,10 @@ import React, { useState } from "react";
 export const MoviesContext = React.createContext(null);
 
 const MoviesContextProvider = (props) => {
-  const [favorites, setFavorites] = useState([]);
-  const [myReviews, setMyReviews] = useState({});
-  const [playlist, setPlaylist] = useState([]);
+  const [favorites, setFavorites] = useState(() => {
+    const savedFavorites = localStorage.getItem("favorites");
+    return savedFavorites ? JSON.parse(savedFavorites) : [];
+  });
 
   const addToFavorites = (movie) => {
     let newFavorites = [];
@@ -14,28 +15,16 @@ const MoviesContextProvider = (props) => {
     } else {
       newFavorites = [...favorites];
     }
+    
     setFavorites(newFavorites);
+    localStorage.setItem("favorites", JSON.stringify(newFavorites));
   };
 
   const removeFromFavorites = (movie) => {
-    setFavorites(favorites.filter((mId) => mId !== movie.id));
+    const newFavorites = favorites.filter((mId) => mId !== movie.id);
+    setFavorites(newFavorites);
+    localStorage.setItem("favorites", JSON.stringify(newFavorites));
   };
-
-  const addReview = (movie, review) => {
-    setMyReviews({ ...myReviews, [movie.id]: review });
-  };
-  // console.log(myReviews);
-
-  const addToPlaylist = (movie) => {
-    let newPlaylist = [];
-    if (!playlist.includes(movie.id)) {
-      newPlaylist = [...playlist, movie.id];
-    } else {
-      newPlaylist = [...playlist];
-    }
-    setPlaylist(newPlaylist);
-  };
-  // console.log(playlist);
 
   return (
     <MoviesContext.Provider
@@ -43,9 +32,6 @@ const MoviesContextProvider = (props) => {
         favorites,
         addToFavorites,
         removeFromFavorites,
-        addReview,
-        addToPlaylist,
-        playlist
       }}
     >
       {props.children}
